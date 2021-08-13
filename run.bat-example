@@ -1,3 +1,3 @@
-cd "<folder where the script is">
+cd "<folder where the script is>"
 start cmd /C "node <the script you want to execute>"
-goto :EOF
+pause
