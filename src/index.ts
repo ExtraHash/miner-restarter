@@ -73,8 +73,8 @@ async function reboot(): Promise<void> {
 async function main() {
     while (true) {
         if (await isOffline()) {
-            log.warn("Worker is offline. Checking again in five minutes.");
-            await sleep(60000 * 5);
+            log.warn("Worker is offline. Checking again in ten minutes.");
+            await sleep(60000 * 10);
             if (await isOffline()) {
                 log.warn("Worker is still offline.");
                 await reboot();
