@@ -5,21 +5,21 @@ import path from "path";
 
 export async function reboot(): Promise<void> {
     switch (os.platform()) {
-        case "linux":
+        case "win32":
             return new Promise((res, rej) => {
                 log.warn("Rebooting.");
-                exec(path.resolve("./scripts/reboot.sh"), (err) => {
+                exec(path.resolve("./scripts/reboot.bat"), (err) => {
                     if (err != null) {
                         rej(err);
                     }
                     res();
                 });
             });
-        case "win32":
+        case "linux":
         default:
             return new Promise((res, rej) => {
                 log.warn("Rebooting.");
-                exec(path.resolve("./scripts/reboot.bat"), (err) => {
+                exec(path.resolve("./scripts/reboot.sh"), (err) => {
                     if (err != null) {
                         rej(err);
                     }

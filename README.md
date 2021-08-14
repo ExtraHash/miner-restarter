@@ -7,6 +7,9 @@ monitors flexpool API and restarts the machine if it finds the worker is offline
 ```env
 WORKER_NAME = RIG_NAME_HERE
 ETH_ADDRESS = ETH_ADDRESS_HERE
+EXPECTED_MIN_HASHRATE = 54000000
 ```
 
-Should work on windows and linux, untested on macOS
+The expected minimum hashrate in this example is equivalent to 54 MH/s. If the reported hashrate drops below this, or if the worker goes offline, it will check again after ten minutes. If the condition is still true, the machine will be rebooted.
+
+Should work on windows and linux, untested on macOS.
