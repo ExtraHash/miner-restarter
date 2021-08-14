@@ -6,7 +6,7 @@ import { config } from "dotenv";
 */
 export function loadEnv(): void {
     config();
-    const requiredEnvVars: string[] = [];
+    const requiredEnvVars: string[] = ["ETH_ADDRESS", "WORKER_NAME"];
     for (const required of requiredEnvVars) {
         if (process.env[required] === undefined) {
             console.warn(
