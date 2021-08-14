@@ -40,7 +40,8 @@ async function main() {
 
         if (
             hashrateStack.isFull() &&
-            average(hashrateStack.getArray()) < EXPECTED_MIN_HASHRATE
+            average(hashrateStack.getArray()) < EXPECTED_MIN_HASHRATE &&
+            hashrateStack.peek() < EXPECTED_MIN_HASHRATE
         ) {
             log.warn(
                 chalk.yellow.bold(
