@@ -55,7 +55,7 @@ async function main() {
                 `Average ETH speed: ${(avgHashrate / 1000000).toFixed(2)} MH/s`
             )
         );
-        await sleep(0.1 * MINUTE);
+        await sleep(1 * MINUTE);
     }
 }
 
