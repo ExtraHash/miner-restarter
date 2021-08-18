@@ -1,6 +1,4 @@
 import log from "electron-log";
-import { loadEnv } from "./utils/loadEnv";
-import axios from "axios";
 import { sleep } from "./utils/sleep";
 import { getInfo } from "./utils/getInfo";
 import { reboot } from "./utils/reboot";
@@ -16,38 +14,28 @@ import { average } from "./utils/average";
 
 async function main() {
     log.info(`Beginning monitoring of ${ETH_ADDRESS} ${WORKER_NAME}`);
-
-    const onlineStack = new Stack<boolean>(10);
-    const hashrateStack = new Stack<number>(10);
+    const hashrateHistory = new Stack<number>(10);
 
     while (true) {
         const workerInfo = await getInfo();
-        onlineStack.push(workerInfo.isOnline);
-        hashrateStack.push(workerInfo.reportedHashrate);
-
-        // check if worker is offline last 10 checks
-        if (
-            onlineStack.isFull() &&
-            onlineStack.getArray().every((value) => {
-                return value === false;
-            })
-        ) {
-            log.warn(chalk.red.bold("Worker is offline."));
-            await reboot();
-        }
-
-        const avgHashrate = average(hashrateStack.getArray());
+        hashrateHistory.push(workerInfo.reportedHashrate);
+        const avgHashrate = average(hashrateHistory.getArray());
 
         if (
-            hashrateStack.isFull() &&
-            average(hashrateStack.getArray()) < EXPECTED_MIN_HASHRATE &&
-            hashrateStack.peek() < EXPECTED_MIN_HASHRATE
+            hashrateHistory.isFull() &&
+            avgHashrate < EXPECTED_MIN_HASHRATE &&
+            hashrateHistory.peek() < EXPECTED_MIN_HASHRATE
         ) {
             log.warn(
                 chalk.yellow.bold(
-                    "Worker is reporting lower than expected hashrate."
+                    "Worker is reporting lower than expected hashrate. Rebooting."
                 )
             );
+            await reboot();
+        }
+
+        if (hashrateHistory.peek() > EXPECTED_MIN_HASHRATE * 2) {
+            log.warn("Worker is reporting >2x expected hashrate. Rebooting.");
             await reboot();
         }
 

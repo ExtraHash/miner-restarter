@@ -35,7 +35,7 @@ export class Stack<Type> {
     }
 
     public getArray() {
-        return this.stack;
+        return [...this.stack];
     }
 
     public isFull() {

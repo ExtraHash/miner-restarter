@@ -17,21 +17,26 @@ const emptyWorker: WorkerInfo = {
 };
 
 export async function getInfo(): Promise<WorkerInfo> {
-    const res = await axios.get(
-        `https://api.flexpool.io/v2/miner/workers?coin=eth&address=${ETH_ADDRESS}`
-    );
+    try {
+        const res = await axios.get(
+            `https://api.flexpool.io/v2/miner/workers?coin=eth&address=${ETH_ADDRESS}`
+        );
 
-    if (res.data.error !== null) {
-        log.warn("Flexpool API returned error");
+        if (res.data.error !== null) {
+            log.warn("Flexpool API returned error");
+            return emptyWorker;
+        }
+
+        // check if given worker name is greater than 0
+        for (const worker of res.data.result) {
+            if (worker.name === WORKER_NAME) {
+                return worker;
+            }
+        }
+
+        return emptyWorker;
+    } catch (err) {
+        log.error(err.toString());
         return emptyWorker;
     }
-
-    // check if given worker name is greater than 0
-    for (const worker of res.data.result) {
-        if (worker.name === WORKER_NAME) {
-            return worker;
-        }
-    }
-
-    return emptyWorker;
 }
