@@ -19,6 +19,10 @@ export class Stack<Type> {
     }
 
     public peek() {
+        if (this.size() === 0) {
+            throw new Error("Out of bounds");
+        }
+
         return this.stack[this.size() - 1];
     }
 
